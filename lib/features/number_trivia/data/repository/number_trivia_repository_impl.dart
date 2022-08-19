@@ -1,14 +1,14 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_tdd_learn/core/error/exeptions.dart';
 import 'package:flutter_tdd_learn/core/error/failures.dart';
-import 'package:flutter_tdd_learn/core/platform/network_info.dart';
+import 'package:flutter_tdd_learn/core/network/network_info.dart';
 import 'package:flutter_tdd_learn/features/number_trivia/data/datasources/number_trivia_local_data_source.dart';
 import 'package:flutter_tdd_learn/features/number_trivia/data/datasources/number_trivia_remote_data_source.dart';
 import 'package:flutter_tdd_learn/features/number_trivia/data/models/number_trivia_model.dart';
 import 'package:flutter_tdd_learn/features/number_trivia/domain/entities/number_trivia.dart';
 import 'package:flutter_tdd_learn/features/number_trivia/domain/repositories/number_trivia_repository.dart';
 
-typedef Future<NumberTrivia> _ConcreteOrRandomChooser();
+typedef _ConcreteOrRandomChooser = Future<NumberTrivia> Function();
 
 class NumberTriviaRepositoryImpl implements NumberTriviaRepository {
   final NumberTriviaRemoteDataSource remoteDataSource;
