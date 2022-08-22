@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_tdd_learn/core/error/failures.dart';
+import 'package:flutter_tdd_learn/core/usecases/usecase.dart';
 
 import 'package:flutter_tdd_learn/core/util/input_converter.dart';
 import 'package:flutter_tdd_learn/features/number_trivia/domain/entities/number_trivia.dart';
@@ -19,6 +21,7 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
   final GetRandomNumberTrivia getRandomNumberTrivia;
   final InputConverter inputConverter;
 
+  NumberTriviaState get initialState => Empty();
   NumberTriviaBloc({
     required GetConcreteNumberTrivia concreteNumberTrivia,
     required GetRandomNumberTrivia randomNumberTrivia,
@@ -27,17 +30,46 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
   })  : assert(concreteNumberTrivia != null),
         // ignore: unnecessary_null_comparison
         assert(randomNumberTrivia != null),
+        // ignore: unnecessary_null_comparison
+        assert(inputConverter != null),
         getConcreteNumberTrivia = concreteNumberTrivia,
         getRandomNumberTrivia = randomNumberTrivia,
         super(Empty()) {
-    on<NumberTriviaEvent>((event, emit) {
-      if (event is GetTriviaForConcreteNumber) {
-        final inputEither =
-            inputConverter.stringToUnsignedInteger(event.numberString);
-        emit(inputEither.fold(
-            (failure) => const Error(message: INVALID_INPUT_FAILURE_MSG),
-            (integer) => throw UnimplementedError()));
-      }
+    on<GetTriviaForConcreteNumber>((event, emit) async {
+      final inputEither =
+          inputConverter.stringToUnsignedInteger(event.numberString);
+      inputEither
+          .fold((failure) => const Error(message: INVALID_INPUT_FAILURE_MSG),
+              (integer) async {
+        emit(Loading());
+        final failureOrTrivia =
+            await getConcreteNumberTrivia(Params(number: integer));
+        failureOrTrivia.fold((failure) {
+          emit(Error(message: _mapFailureToMessage(failure)));
+        }, (trivia) {
+          emit(Loaded(trivia: trivia));
+        });
+      });
     });
+    on<GetTriviaForRandomNumber>((event, emit) async {
+      emit(Loading());
+      final failureOrTrivia = await getRandomNumberTrivia(NoParams());
+      failureOrTrivia.fold((failure) {
+        emit(Error(message: _mapFailureToMessage(failure)));
+      }, (trivia) {
+        emit(Loaded(trivia: trivia));
+      });
+    });
+  }
+}
+
+String _mapFailureToMessage(Failure failure) {
+  switch (failure.runtimeType) {
+    case ServerFailure:
+      return SERVER_FAILURE_MSG;
+    case CacheFailure:
+      return CACHE_FAILURE_MSG;
+    default:
+      return 'Unexpected error';
   }
 }
