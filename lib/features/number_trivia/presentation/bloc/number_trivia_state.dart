@@ -6,12 +6,12 @@ abstract class NumberTriviaState extends Equatable {
 
 class Empty extends NumberTriviaState {
   @override
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [];
 }
 
 class Loading extends NumberTriviaState {
   @override
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [];
 }
 
 class Loaded extends NumberTriviaState {
