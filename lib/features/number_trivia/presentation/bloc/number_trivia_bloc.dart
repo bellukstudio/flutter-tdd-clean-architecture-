@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_tdd_learn/core/error/failures.dart';
 import 'package:flutter_tdd_learn/core/usecases/usecase.dart';
@@ -22,33 +23,22 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
   final InputConverter inputConverter;
 
   NumberTriviaState get initialState => Empty();
+
   NumberTriviaBloc({
-    required GetConcreteNumberTrivia concreteNumberTrivia,
-    required GetRandomNumberTrivia randomNumberTrivia,
+    required this.getConcreteNumberTrivia,
+    required this.getRandomNumberTrivia,
     required this.inputConverter,
-    // ignore: unnecessary_null_comparison
-  })  : assert(concreteNumberTrivia != null),
-        // ignore: unnecessary_null_comparison
-        assert(randomNumberTrivia != null),
-        // ignore: unnecessary_null_comparison
-        assert(inputConverter != null),
-        getConcreteNumberTrivia = concreteNumberTrivia,
-        getRandomNumberTrivia = randomNumberTrivia,
-        super(Empty()) {
+  }) : super(Empty()) {
     on<GetTriviaForConcreteNumber>((event, emit) async {
       final inputEither =
           inputConverter.stringToUnsignedInteger(event.numberString);
-      inputEither.fold((failure) {
+      inputEither.fold((failure) async* {
         emit(const Error(message: INVALID_INPUT_FAILURE_MSG));
       }, (integer) async {
         emit(Loading());
         final failureOrTrivia =
             await getConcreteNumberTrivia(Params(number: integer));
-        failureOrTrivia.fold((failure) {
-          emit(Error(message: _mapFailureToMessage(failure)));
-        }, (trivia) {
-          emit(Loaded(trivia: trivia));
-        });
+        _eitherLoadedOrErrorState(failureOrTrivia);
       });
     });
     on<GetTriviaForRandomNumber>((event, emit) async {
@@ -61,6 +51,15 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
       });
     });
   }
+}
+
+Stream<NumberTriviaState> _eitherLoadedOrErrorState(
+  Either<Failure, NumberTrivia> failureOrTrivia,
+) async* {
+  failureOrTrivia.fold(
+    (failure) => Error(message: _mapFailureToMessage(failure)),
+    (trivia) => Loaded(trivia: trivia),
+  );
 }
 
 String _mapFailureToMessage(Failure failure) {

@@ -27,8 +27,8 @@ void main() {
     mockInputConverter = MockInputConverter();
 
     bloc = NumberTriviaBloc(
-        concreteNumberTrivia: mockGetConcreteNumberTrivia,
-        randomNumberTrivia: mockGetRandomNumberTrivia,
+        getConcreteNumberTrivia: mockGetConcreteNumberTrivia,
+        getRandomNumberTrivia: mockGetRandomNumberTrivia,
         inputConverter: mockInputConverter);
   });
 

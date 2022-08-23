@@ -26,8 +26,8 @@ class _TriviaControlsState extends State<TriviaControls> {
           onChanged: (value) {
             inputStr = value;
           },
-          onSubmitted: (_) {
-            addConcrete();
+          onSubmitted: (_) async {
+            await addConcrete();
           },
         ),
         const SizedBox(
@@ -59,12 +59,12 @@ class _TriviaControlsState extends State<TriviaControls> {
     );
   }
 
-  void addConcrete() {
+  Future<void> addConcrete() async {
     inputController.clear();
     context.read<NumberTriviaBloc>().add(GetTriviaForConcreteNumber(inputStr));
   }
 
-  void addRandom() {
+  Future<void> addRandom() async {
     inputController.clear();
     context.read<NumberTriviaBloc>().add(GetTriviaForRandomNumber());
   }
