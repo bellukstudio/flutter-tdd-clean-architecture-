@@ -8,7 +8,7 @@ import 'network_info_test.mocks.dart';
 // @GenerateMocks([Connectivity])
 @GenerateMocks([InternetConnectionChecker])
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
+  // TestWidgetsFlutterBinding.ensureInitialized();
   late final NetworkInfoImpl networkInfoImpl;
   // late final MockConnectivity mockConnectivity;
   late final MockInternetConnectionChecker mockInternetConnectionChecker;
