@@ -43,8 +43,8 @@ void main() {
       dataSourceImpl.getConcreteNumberTrivia(tNumber);
 
       ////assert
-      verify(mockHttpClient.get(Uri.parse('http://numbersapi.com/$tNumber'),
-          headers: {'Content-Type:': 'application/json'}));
+      verify(mockHttpClient.get(Uri.parse('http://numberapi.com/$tNumber'),
+          headers: {'Content-Type': 'application/json'}));
     });
     test('should perform a GET request when response code 200', () async {
       ////arrange
@@ -79,8 +79,8 @@ void main() {
       dataSourceImpl.getRandomNumberTrivia();
 
       ////assert
-      verify(mockHttpClient.get(Uri.parse('http://numbersapi.com/random'),
-          headers: {'Content-Type:': 'application/json'}));
+      verify(mockHttpClient.get(Uri.parse('http://numberapi.com/random'),
+          headers: {'Content-Type': 'application/json'}));
     });
     test('should perform a GET request when response code 200', () async {
       ////arrange
