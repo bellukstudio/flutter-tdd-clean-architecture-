@@ -6,7 +6,7 @@ import 'package:flutter_tdd_learn/features/number_trivia/data/repository/number_
 import 'package:flutter_tdd_learn/features/number_trivia/domain/repositories/number_trivia_repository.dart';
 import 'package:flutter_tdd_learn/features/number_trivia/domain/usecases/get_concrete_number_trivia.dart';
 import 'package:flutter_tdd_learn/features/number_trivia/domain/usecases/get_random_number_trivia.dart';
-import 'package:flutter_tdd_learn/features/number_trivia/presentation/bloc/bloc..dart';
+import 'package:flutter_tdd_learn/features/number_trivia/presentation/bloc/bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';

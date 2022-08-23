@@ -24,17 +24,17 @@ class NumberTriviaRemoteDataSourceImpl implements NumberTriviaRemoteDataSource {
   });
   @override
   Future<NumberTriviaModel> getConcreteNumberTrivia(int? number) async {
-    return _getTriviaUrl('http://numbersapi.com/$number');
+    return _getTriviaUrl('http://numberapi.com/$number');
   }
 
   @override
   Future<NumberTriviaModel> getRandomNumberTrivia() async {
-    return _getTriviaUrl('http://numbersapi.com/random');
+    return _getTriviaUrl('http://numberapi.com/random');
   }
 
   Future<NumberTriviaModel> _getTriviaUrl(String url) async {
     final response = await client
-        .get(Uri.parse(url), headers: {'Content-Type:': 'application/json'});
+        .get(Uri.parse(url), headers: {'Content-Type': 'application/json'});
     if (response.statusCode == 200) {
       return NumberTriviaModel.fromJson(json.decode(response.body));
     } else {
